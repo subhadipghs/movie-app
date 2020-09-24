@@ -1,7 +1,7 @@
 .inputSubmit {
   background-color: #5a5a5a;
   color: var(--white);
-  width: 1rem;
+  width: 4rem !important;
 }
 
 .formStyle {

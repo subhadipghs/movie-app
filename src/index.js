@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom'
 import {Helmet} from 'react-helmet'
 import App from './containers/App'
 import {ThemeProvider} from 'styled-components'
+import {Provider} from 'react-redux'
+import store from './redux/store'
 import {theme} from './styles/theme'
 import GlobalStyle from './styles/global'
 
@@ -11,6 +13,7 @@ const root = document.getElementById('app')
 // app
 const app = (
   <React.StrictMode>
+    <Provider store={store}>
       <ThemeProvider theme={theme}>
         <Helmet>
           <title>Movie App</title>
@@ -22,6 +25,7 @@ const app = (
         <App />
         <GlobalStyle />
       </ThemeProvider>
+    </Provider>
   </React.StrictMode>
 )
 // render the app at root

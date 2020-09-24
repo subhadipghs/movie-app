@@ -11,8 +11,8 @@ import styles from './Card.module.css'
  */
 
 class Card extends React.Component {
-  static Image = ({src, ...rest}) => (
-    <img src={src} className={styles.image} {...rest} />
+  static Image = ({src, altText, ...rest}) => (
+    <img src={src} alt={altText} className={styles.image} {...rest} />
   )
 
   static Header = ({children, ...rest}) => (

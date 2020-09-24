@@ -10,6 +10,6 @@ afterEach(() => cleanup())
 */
 
 test('renders app', () => {
-  const { getByText } = render(<App />)
-  expect(getByText(/Movie name/i)).toBeInTheDocument();
+  const {getByText} = render(<App />)
+  expect(getByText(/Movie name/i)).toBeInTheDocument()
 })

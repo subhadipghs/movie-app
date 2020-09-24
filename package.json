@@ -12,12 +12,14 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "eject": "react-scripts eject",
     "format": "prettier --write \"**/*.+(js|jsx|json|css|md|mdx|html)\"",
     "serve": "serve --no-clipboard --single --listen 8811 build"
   },
   "dependencies": {
     "@emotion/core": "^10.0.35",
     "axios": "^0.20.0",
+    "dotenv": "^8.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-helmet": "^6.1.0",

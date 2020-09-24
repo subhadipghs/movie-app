@@ -4,6 +4,7 @@ import {
   FETCH_MOVIE,
   FETCH_MOVIE_SUCCESS,
   FETCH_MOVIE_ERROR,
+  FETCH_MOVIE_FINISHED
 } from '../types/movies'
 
 export const fetchMovie = () => {
@@ -26,22 +27,30 @@ export const fetchMovieError = error => {
   }
 }
 
+export const fetchMovieFinished = () => {
+  return {
+    type: FETCH_MOVIE_FINISHED
+  }
+}
+
 // search for a movie
-export const getMovieSearch = query => {
+export const getMovieSearch = (query, page = 1) => {
   return dispatch => {
     return tmdbAPI
       .get(`search/movie/`, {
         params: {
           query: query,
-          page: 1,
+          page: page,
         },
       })
-      .then(response => {
+      .then(async response => {
         dispatch(fetchMovie())
-        const searchedResults = response.data
-        console.log('movies result', searchedResults)
-        dispatch(fetchMovieSuccess(searchedResults))
+        await dispatch(fetchMovieSuccess(response.data))
+        await dispatch(fetchMovieFinished())
       })
-      .catch(error => dispatch(fetchMovieError(error.message)))
+      .catch(error => {
+        dispatch(fetchMovieError(error.message))
+        dispatch(fetchMovieFinished())
+      })
   }
 }

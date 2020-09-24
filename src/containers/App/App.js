@@ -2,86 +2,82 @@ import React from 'react'
 import Form from '../../components/Form'
 import Label from '../../components/Label'
 import Input from '../../components/Input'
+import Loading from '../../components/Loading'
 import Layout from './Layout'
+import Grid from './Grid'
+import ErrorMessage from './ErrorMessage'
 import MovieCardList from '../../components/MovieCardList'
 import {getMovieSearch} from '../../redux/actions/movies'
 import {connect} from 'react-redux'
-import {Provider} from 'react-redux'
-import store from '../../redux/store'
 import styles from './App.module.css'
 
-const movies = [
-  {
-    id: 1,
-    title: 'Jurassic',
-    image: '',
-    rating: 10,
-    releaseDate: '10-3-2002',
-    about:
-      'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Delectus laudantium temporibus beatae suscipit cumque! Quisquam, sunt? Iste minus assumenda deserunt earum consequuntur? Ab itaque excepturi repellat et beatae officia quidem.',
-  },
-  {
-    id: 1,
-    title: 'Jurassic',
-    image: '',
-    rating: 10,
-    releaseDate: '10-3-2002',
-    about:
-      'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Delectus laudantium temporibus beatae suscipit cumque! Quisquam, sunt? Iste minus assumenda deserunt earum consequuntur? Ab itaque excepturi repellat et beatae officia quidem.',
-  },
-]
-
-function App(props) {
+function App({movies, finished, loading, error, getMovieSearch}) {
   const [query, setQuery] = React.useState('')
+  const [isQueried, setIsQueried] = React.useState(false)
+  console.log('loading', loading, 'movies', movies, 'finsh', finished)
 
-  function submitted(e) {
+  function getMovie(e) {
     e.preventDefault()
-    props.getMovieSearch(props)
+    getMovieSearch(query)
+    setIsQueried(true)
+  }
+
+  function setQueryString(e) {
+    setQuery(e.target.value)
   }
 
   return (
-    <Provider store={store}>
-      <Layout>
-        <Form submitted={e => submitted(e)} className={styles.formStyle}>
-          <Label htmlFor="query">Movie Name</Label>
-          <Input
-            type="text"
-            name="query"
-            id="query"
-            placeholder="Enter Movie name..."
-            value={query}
-            changed={e => setQuery(e.target.value)}
-            variant="pill"
-            padding="0rem 1rem"
-            margin="0rem 1rem"
-          />
-          <Input
-            type="submit"
-            value="Search"
-            variant="pill"
-            className={styles.inputSubmit}
-            width="4rem"
-            noBorder
-          />
-        </Form>
-        <div
-          style={{
-            display: 'grid',
-            placeItems: 'center',
-            margin: '1rem 0rem',
-          }}
-        >
+    <Layout>
+      <Form submitted={e => getMovie(e)} className={styles.formStyle}>
+        <Label htmlFor="query">Movie Name</Label>
+        <Input
+          name="query"
+          id="query"
+          placeholder="Enter Movie name..."
+          value={query}
+          changed={e => setQueryString(e)}
+          variant="pill"
+        />
+        <Input
+          type="submit"
+          value="Search"
+          variant="pill"
+          className={styles.inputSubmit}
+          noBorder
+        />
+      </Form>
+      <Grid margin={1}>
+        {loading === true ? <Loading /> : null}
+        {!loading && movies.length > 0 ? (
           <MovieCardList movies={movies} />
-        </div>
-      </Layout>
-    </Provider>
+        ) : finished ? (
+          <ErrorMessage>Sorry! No movies found</ErrorMessage>
+        ) : null}
+        {error && <ErrorMessage>{error}</ErrorMessage>}
+      </Grid>
+    </Layout>
   )
 }
-
+// map the movie states to props of App
 const mapStateToProps = state => {
   return {
-    all: state.movie,
+    movies: moviesSelector(state),
+    loading: loadingSelector(state),
+    error: errorSelector(state),
+    finished: finishedSelector(state),
   }
 }
+// error state selector
+
+const errorSelector = state => state.movies.error
+
+// select the loading state
+const loadingSelector = state => state.movies?.loading
+
+// select the results from the fetched results
+const moviesSelector = state => state.movies?.data?.results ?? []
+
+// select the finsished state
+const finishedSelector = state => state.movies.finished
 
 export default connect(mapStateToProps, {getMovieSearch})(App)
