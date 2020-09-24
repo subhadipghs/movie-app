@@ -1,0 +1,9 @@
+.inputSubmit {
+  background-color: #5a5a5a;
+  color: var(--white);
+  width: 1rem;
+}
+
+.formStyle {
+  margin: 0rem 1rem;
+}
